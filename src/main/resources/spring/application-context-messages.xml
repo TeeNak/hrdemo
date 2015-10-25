@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <beans>
+        <!--
+            - Message source for this context, loaded from localized "messages_xx" files.
+            - Files are stored inside src/main/resources
+        -->
+
+
+        <!-- メッセージリソースについて
+               メッセージソースをcontroller以外からも使う場合は service や repositoryと同じコンテキストに入れなければ
+               ならない。
+
+            fallbackToSystemLocale システムロケールへのフォールバックを許可するかどうか
+                                    デフォルトはtrue
+                                    これがtrueであると、日本語OSユーザ上で動作している場合
+                                    messages_en.propertiesにメッセージがない場合にmessage.propertiesの値が使われず
+                                    messages_ja.propertiesの値が使われることになる。
+            defaultEncoding ファイルのエンコーディングを指定。
+                    Java6以降ではプロパティファイルに直接UTF-8文字列を書けるようになっており、native2asciiを掛ける
+                    必要はなくなったが、それを読み込む際は
+                    properties.load(new InputStreamReader(is, "UTF-8"));
+                    のように明示的にエンコードを指定しなければならない。
+                    defaultEncodingを指定しない場合は
+                    properties.load(is)
+                    が、行われ -Dfile.encoding=UTF-8 が指定されていたとしてもこの場合は native2ascii が必要となって
+                    しまう。
+
+        -->
+
+        <!-- ResourceBundleMessageSource
+            basename クラスパスが通っている場所からのパス
+            　例  ファイルが/WEB-INF/classes/messages/messages.properties である場合
+                messages/messages
+        　　　と指定する
+        -->
+
+        <!--
+            <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+                  p:fallbackToSystemLocale="false"
+                  p:defaultEncoding="UTF-8"
+                  p:basename="messages/messages"/>
+        -->
+
+        <!-- ReloadableResourceBundleMessageSource
+            basename メッセージファイルのコンテキストルートからのパス
+                    classpath:を指定するとクラスパスが通っている場所からのパス
+                    例 ファイルが/WEB-INF/classes/messages/messages.properties である場合
+                        /WEB-INF/classes/messages/messages
+                    または
+                       classpath:messages/messages
+
+        -->
+        <bean id="messageSource"
+              class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+              p:fallbackToSystemLocale="false"
+              p:defaultEncoding="UTF-8"
+              p:basename="classpath:messages/messages"/>
+
+
+
+    </beans>
+
+</beans>
